@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:amq="http://activemq.apache.org/schema/core"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+      http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+      http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd
+      ">
+	<context:property-placeholder location="classpath*:properties/*.properties" />
+	
+	<context:component-scan base-package="dao,com.slg.service" />
+	
+	<!-- 激活annotation功能 -->
+	<context:annotation-config />
+	<!-- 激活annotation功能 -->
+	<context:spring-configured />
+	<!-- 启动aop切面编程注解 -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	
+	<!-- 数据库连接池 -->
+	<bean id="mysqlDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="net.sf.log4jdbc.DriverSpy" />
+		<property name="url"
+			value="${slg.database.url}"/>
+		<property name="username" value="${slg.database.username}" />
+		<property name="password" value="${slg.database.password}" />
+	</bean>
+	<bean id="mysqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+		name="businessSqlSessionFactory"
+		p:dataSource-ref="mysqlDataSource"
+		p:configLocation="classpath:mybatis-config.xml"
+		p:mapperLocations="classpath*:persistence/*.xml" />
+	<mybatis:scan base-package="persistence" factory-ref="mysqlSessionFactory" />
+	
+</beans>

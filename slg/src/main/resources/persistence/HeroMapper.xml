@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="persistence.HeroMapper" >
+  <resultMap id="BaseResultMap" type="entity.Hero" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="attack" property="attack" jdbcType="INTEGER" />
+    <result column="defense" property="defense" jdbcType="INTEGER" />
+    <result column="rare" property="rare" jdbcType="INTEGER" />
+    <result column="hp" property="hp" jdbcType="INTEGER" />
+    <result column="speed" property="speed" jdbcType="INTEGER" />
+    <result column="attack_rate" property="attackRate" jdbcType="DOUBLE" />
+  </resultMap>
+ <insert id="insertHero" parameterType="entity.Hero">
+    insert into hero (name, attack, defense, 
+      rare, hp, attack_rate, speed)
+    values (#{name,jdbcType=VARCHAR}, #{attack,jdbcType=INTEGER}, #{defense,jdbcType=INTEGER}, 
+      #{rare,jdbcType=INTEGER}, #{hp,jdbcType=INTEGER}, 
+      #{attackRate,jdbcType=DOUBLE}, #{speed,jdbcType=INTEGER})
+  </insert>
+   <select id="selectHeroByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from hero 
+    where name = #{name, jdbcType=VARCHAR}
+  </select>
+</mapper>
